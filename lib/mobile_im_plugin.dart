@@ -1,0 +1,58 @@
+import 'dart:async';
+
+import 'package:flutter/services.dart';
+
+class MobileImPlugin {
+  static MobileImPlugin _instance;
+  final MethodChannel _methodChannel;
+  static StreamController streamController = StreamController.broadcast();
+
+  MobileImPlugin._(this._methodChannel);
+
+  static MobileImPlugin getInstance() {
+    if (_instance == null) {
+      final MethodChannel methodChannel =
+          const MethodChannel('mobile_im_plugin')
+            ..setMethodCallHandler(_methodHandler);
+      _instance = MobileImPlugin._(methodChannel);
+    }
+    return _instance;
+  }
+
+  Future<String> get platformVersion async {
+    final String version =
+        await _methodChannel.invokeMethod('getPlatformVersion');
+    return version;
+  }
+
+  static Future _methodHandler(MethodCall call) async {
+    switch (call.method) {
+      case "onReceiveMessage":
+        streamController.add(call.arguments);
+        break;
+      default:
+        throw new UnsupportedError("Unrecognized Event");
+    }
+  }
+
+  Future<String> get initSDK async {
+    final String version = await _methodChannel.invokeMethod('initSDK');
+    return version;
+  }
+
+  Future<int> login(String userName, String password) async {
+    final int status = await _methodChannel.invokeMethod('login', {
+      'username': userName,
+      'password': password,
+    });
+    return status;
+  }
+
+  Future<int> send(String message, String friendId) async {
+    final int status = await _methodChannel.invokeMethod('sendMessage', {
+      'message': message,
+      'friendId': friendId,
+    });
+    return status;
+  }
+}
