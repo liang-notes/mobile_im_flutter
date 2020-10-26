@@ -21,6 +21,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     initPlatformState();
+
     MobileImPlugin.streamController.stream.listen((message) {
       print('收到的消息====$message');
       setState(() {
@@ -31,6 +32,7 @@ class _MyAppState extends State<MyApp> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
+    await MobileImPlugin.getInstance().init();
     String platformVersion;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {

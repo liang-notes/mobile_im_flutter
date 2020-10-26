@@ -1,6 +1,5 @@
 package com.example.mobile_im_plugin.events;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
@@ -9,10 +8,18 @@ import net.x52im.mobileimsdk.server.protocal.Protocal;
 
 import java.util.ArrayList;
 
+import io.flutter.plugin.common.MethodChannel;
+
 public class MessageQoSEventImpl implements MessageQoSEvent {
     private final static String TAG = MessageQoSEventImpl.class.getSimpleName();
 
     private Context mainGUI = null;
+    private MethodChannel channel;
+
+    public MessageQoSEventImpl(MethodChannel channel) {
+        this.channel = channel;
+    }
+
     /**
      * 消息未送达的回调事件通知.
      *
@@ -47,8 +54,7 @@ public class MessageQoSEventImpl implements MessageQoSEvent {
         }
     }
 
-    public MessageQoSEventImpl setMainGUI(Context mainGUI)
-    {
+    public MessageQoSEventImpl setMainGUI(Context mainGUI) {
         this.mainGUI = mainGUI;
         return this;
     }

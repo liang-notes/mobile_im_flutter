@@ -1,6 +1,5 @@
 package com.example.mobile_im_plugin.events;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
@@ -21,6 +20,7 @@ public class ChatBaseEventImpl implements ChatBaseEvent {
     public ChatBaseEventImpl(MethodChannel channel) {
         this.channel = channel;
     }
+
     /**
      * 本地用户的登陆结果回调事件通知。
      *

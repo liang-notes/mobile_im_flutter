@@ -1,7 +1,6 @@
 package com.example.mobile_im_plugin;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.example.mobile_im_plugin.events.ChatBaseEventImpl;
 import com.example.mobile_im_plugin.events.ChatMessageEventImpl;
@@ -10,17 +9,12 @@ import com.example.mobile_im_plugin.events.MessageQoSEventImpl;
 import net.x52im.mobileimsdk.android.ClientCoreSDK;
 import net.x52im.mobileimsdk.android.conf.ConfigEntity;
 
-import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
-import io.flutter.plugin.common.MethodChannel.Result;
 
-public class IMClientManager  {
+public class IMClientManager {
     private static String TAG = IMClientManager.class.getSimpleName();
 
     private static IMClientManager instance = null;
-
-    private MethodChannel channel;
 
     /**
      * MobileIMSDK是否已被初始化. true表示已初化完成，否则未初始化.
@@ -40,35 +34,26 @@ public class IMClientManager  {
      */
     private MessageQoSEventImpl messageQoSListener = null;
 
-    private Context context = null;
 
-    public static IMClientManager getInstance(Context context,  MethodChannel channel) {
+    public static IMClientManager getInstance() {
         if (instance == null)
-            instance = new IMClientManager(context,channel);
+            instance = new IMClientManager();
         return instance;
     }
 
-    private IMClientManager(Context context, MethodChannel channel) {
-        this.context = context;
-        this.channel = channel;
-        initMobileIMSDK();
+    private IMClientManager() {
+//        initMobileIMSDK();
     }
 
     /**
      * MobileIMSDK的初始化方法。正式的APP项目中，建议本方法在Application的子类中调用。
      */
-    public void initMobileIMSDK() {
+    public void initMobileIMSDK(Context context, MethodChannel channel, String appKey, String serverIP, int serverPort, boolean debug) {
         if (!init) {
-            // 设置AppKey
-            ConfigEntity.appKey = "5418023dfd98c579b6001741";
-            Log.d("xxx-context", "initMobileIMSDK "+ context);
-
-            // 设置服务器ip和服务器端口
-//			ConfigEntity.serverIP = "192.168.82.138";
-//			ConfigEntity.serverPort = 8901;
-
-			ConfigEntity.serverIP = "rbcore.52im.net";
-			ConfigEntity.serverPort = 8901;
+            // 设置ConfigEntity
+            ConfigEntity.appKey = appKey;
+            ConfigEntity.serverIP = serverIP;
+            ConfigEntity.serverPort = serverPort;
 
             // MobileIMSDK核心IM框架的敏感度模式设置
 //			ConfigEntity.setSenseMode(SenseMode.MODE_15S);
@@ -77,19 +62,18 @@ public class IMClientManager  {
 //			LocalSocketProvider.TCP_FRAME_MAX_BODY_LENGTH = 60 * 1024;
 
             // 开启/关闭DEBUG信息输出
-//	    	ClientCoreSDK.DEBUG = false;
+            ClientCoreSDK.DEBUG = debug;
 
             // 【特别注意】请确保首先进行核心库的初始化（这是不同于iOS和Java端的地方)
-            ClientCoreSDK.getInstance().init(this.context);
+            ClientCoreSDK.getInstance().init(context);
 
             // 设置事件回调
-            baseEventListener = new ChatBaseEventImpl(this.channel);
-            transDataListener = new ChatMessageEventImpl(this.channel);
-            messageQoSListener = new MessageQoSEventImpl();
+            baseEventListener = new ChatBaseEventImpl(channel);
+            transDataListener = new ChatMessageEventImpl(channel);
+            messageQoSListener = new MessageQoSEventImpl(channel);
             ClientCoreSDK.getInstance().setChatBaseEvent(baseEventListener);
             ClientCoreSDK.getInstance().setChatMessageEvent(transDataListener);
             ClientCoreSDK.getInstance().setMessageQoSEvent(messageQoSListener);
-            Log.d("xxx", "initMobileIMSDK");
             init = true;
         }
     }
@@ -98,7 +82,6 @@ public class IMClientManager  {
         ClientCoreSDK.getInstance().release();
         resetInitFlag();
     }
-
 
 
     /**

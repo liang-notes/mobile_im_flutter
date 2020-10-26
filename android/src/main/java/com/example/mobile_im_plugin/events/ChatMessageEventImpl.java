@@ -6,16 +6,17 @@ import android.util.Log;
 import net.x52im.mobileimsdk.android.event.ChatMessageEvent;
 import net.x52im.mobileimsdk.server.protocal.ErrorCode;
 
-import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodChannel;
 
 public class ChatMessageEventImpl implements ChatMessageEvent {
     private final static String TAG = ChatMessageEventImpl.class.getSimpleName();
     private Context mainGUI = null;
     private MethodChannel channel;
+
     public ChatMessageEventImpl(MethodChannel channel) {
         this.channel = channel;
     }
+
     /**
      * 收到普通消息的回调事件通知。
      * <br>应用层可以将此消息进一步按自已的IM协议进行定义，从而实现完整的即时通信软件逻辑。
