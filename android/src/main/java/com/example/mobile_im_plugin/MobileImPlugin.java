@@ -2,12 +2,13 @@ package com.example.mobile_im_plugin;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import net.x52im.mobileimsdk.android.core.LocalDataSender;
-import net.x52im.mobileimsdk.android.core.LocalSocketProvider;
+import net.openmob.mobileimsdk.android.core.LocalUDPDataSender;
+import net.openmob.mobileimsdk.android.core.LocalUDPSocketProvider;
 
 import java.util.HashMap;
 import java.util.Observer;
@@ -75,30 +76,12 @@ public class MobileImPlugin implements FlutterPlugin, MethodCallHandler {
     }
 
     private void logout(final Result result) {
-
-        new AsyncTask<Object, Integer, Integer>() {
-            @Override
-            protected Integer doInBackground(Object... params) {
-                int code = -1;
-                try {
-                    code = LocalDataSender.getInstance().sendLoginout();
-                } catch (Exception e) {
-                    Log.w(TAG, e);
-                }
-                // 退出登陆时记得一定要调用此行，不然不退出APP的情况下再登陆时会报 code=203错误哦！
-                IMClientManager.getInstance().resetInitFlag();
-                return code;
-            }
-
-            @Override
-            protected void onPostExecute(Integer code) {
-                if (code == 0)
-                    Log.d(TAG, "注销登陆请求已完成！");
-                else
-                    Log.d(TAG, "注销登陆请求发送失败(错误码:" + code + ")");
-                result.success(code);
-            }
-        }.execute();
+        int code = LocalUDPDataSender.getInstance(context).sendLoginout();
+        if (code == 0)
+            Log.d(TAG, "注销登陆请求已完成！");
+        else
+            Log.d(TAG, "注销登陆请求发送失败(错误码:" + code + ")");
+        result.success(code);
     }
 
     private void doSendMessage(Object arguments, final Result result) {
@@ -107,17 +90,12 @@ public class MobileImPlugin implements FlutterPlugin, MethodCallHandler {
         String toUserId = map.get("toUserId");
         if (message.length() > 0 && toUserId.length() > 0) {
             // 发送消息（Android系统要求必须要在独立的线程中发送）
-            new LocalDataSender.SendCommonDataAsync(message, toUserId) {
-                @Override
-                protected void onPostExecute(Integer code) {
-                    result.success(code);
-                    if (code == 0)
-                        Log.d(TAG, "数据已成功发出");
-                    else
-                        Log.d(TAG, "数据发送失败(错误码:" + code + ")");
-
-                }
-            }.execute();
+            int code = LocalUDPDataSender.getInstance(context).sendCommonData(message, toUserId);
+            if (code == 0)
+                Log.d(TAG, "数据已成功发出");
+            else
+                Log.d(TAG, "数据发送失败(错误码:" + code + ")");
+            result.success(code);
         } else {
             //自定义错误码
             result.success(10000);
@@ -129,7 +107,7 @@ public class MobileImPlugin implements FlutterPlugin, MethodCallHandler {
         final HashMap<String, String> map = (HashMap<String, String>) arguments;
         // 无条件重置socket，防止首次登陆时用了错误的ip或域名，下次登陆时sendData中仍然使用老的ip
         // 说明：本行代码建议仅用于Demo时，生产环境下是没有意义的，因为你的APP里不可能连IP都搞错了
-        LocalSocketProvider.getInstance().closeLocalSocket();
+        LocalUDPSocketProvider.getInstance().closeLocalUDPSocket();
         // * 立即显示登陆处理进度提示（并将同时启动超时检查线程）
         // * 设置好服务端反馈的登陆结果观察者（当客户端收到服务端反馈过来的登陆消息时将被通知）
         IMClientManager.getInstance().getBaseEventListener()
@@ -138,7 +116,7 @@ public class MobileImPlugin implements FlutterPlugin, MethodCallHandler {
         String user_id = map.get("username");
         String user_token = map.get("password");
         // 异步提交登陆id和token
-        new LocalDataSender.SendLoginDataAsync(user_id, user_token) {
+        new LocalUDPDataSender.SendLoginDataAsync(context, user_id, user_token) {
             @Override
             protected void fireAfterSendLogin(int code) {
                 if (code == 0) {

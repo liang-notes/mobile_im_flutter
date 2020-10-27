@@ -3,7 +3,8 @@ package com.example.mobile_im_plugin.events;
 import android.content.Context;
 import android.util.Log;
 
-import net.x52im.mobileimsdk.android.event.ChatBaseEvent;
+
+import net.openmob.mobileimsdk.android.event.ChatBaseEvent;
 
 import java.util.Observer;
 
@@ -27,7 +28,7 @@ public class ChatBaseEventImpl implements ChatBaseEvent {
      * @param errorCode 服务端反馈的登录结果：0 表示登陆成功，否则为服务端自定义的出错代码（按照约定通常为>=1025的数）
      */
     @Override
-    public void onLoginResponse(int errorCode) {
+    public void onLoginMessage(int errorCode) {
         if (errorCode == 0) {
             Log.i(TAG, "【DEBUG_UI】IM服务器登录/重连成功！");
 
@@ -54,7 +55,7 @@ public class ChatBaseEventImpl implements ChatBaseEvent {
      * @param errorCode 本回调参数表示表示连接断开的原因，目前错误码没有太多意义，仅作保留字段，目前通常为-1
      */
     @Override
-    public void onLinkClose(int errorCode) {
+    public void onLinkCloseMessage(int errorCode) {
         Log.e(TAG, "【DEBUG_UI】与IM服务器的网络连接出错关闭了，error：" + errorCode);
 
         // TODO 以下代码仅用于DEMO哦

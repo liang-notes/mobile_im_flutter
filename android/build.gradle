@@ -40,12 +40,11 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.0'
 
     // MobileIMSDK的依赖库
-    implementation 'com.google.code.gson:gson:2.8.6'
-    implementation files('libs/netty-all-4.1.50.Final.jar')
+    implementation files('libs/gson-2.2.4.jar')
 
     // MobileIMSDK的SDK库
-    implementation files('libs/MobileIMSDKServer_META.jar')
-    implementation files('libs/MobileIMSDK4a_tcp.jar')
+    implementation files('libs/MobileIMSDKServerX_meta.jar')
+    implementation files('libs/MobileIMSDK4a.jar')
 
 }
 

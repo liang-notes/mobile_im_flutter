@@ -6,8 +6,8 @@ import com.example.mobile_im_plugin.events.ChatBaseEventImpl;
 import com.example.mobile_im_plugin.events.ChatMessageEventImpl;
 import com.example.mobile_im_plugin.events.MessageQoSEventImpl;
 
-import net.x52im.mobileimsdk.android.ClientCoreSDK;
-import net.x52im.mobileimsdk.android.conf.ConfigEntity;
+import net.openmob.mobileimsdk.android.conf.ConfigEntity;
+import net.openmob.mobileimsdk.android.ClientCoreSDK;
 
 import io.flutter.plugin.common.MethodChannel;
 
@@ -42,7 +42,6 @@ public class IMClientManager {
     }
 
     private IMClientManager() {
-//        initMobileIMSDK();
     }
 
     /**
@@ -53,7 +52,7 @@ public class IMClientManager {
             // 设置ConfigEntity
             ConfigEntity.appKey = appKey;
             ConfigEntity.serverIP = serverIP;
-            ConfigEntity.serverPort = serverPort;
+            ConfigEntity.serverUDPPort = serverPort;
 
             // MobileIMSDK核心IM框架的敏感度模式设置
 //			ConfigEntity.setSenseMode(SenseMode.MODE_15S);
@@ -72,7 +71,7 @@ public class IMClientManager {
             transDataListener = new ChatMessageEventImpl(channel);
             messageQoSListener = new MessageQoSEventImpl(channel);
             ClientCoreSDK.getInstance().setChatBaseEvent(baseEventListener);
-            ClientCoreSDK.getInstance().setChatMessageEvent(transDataListener);
+            ClientCoreSDK.getInstance().setChatTransDataEvent(transDataListener);
             ClientCoreSDK.getInstance().setMessageQoSEvent(messageQoSListener);
             init = true;
         }
@@ -84,13 +83,6 @@ public class IMClientManager {
     }
 
 
-    /**
-     * 重置init标识。
-     * <p>
-     * <b>重要说明：</b>不退出APP的情况下，重新登陆时记得调用一下本方法，不然再
-     * 次调用 {@link #initMobileIMSDK()} 时也不会重新初始化MobileIMSDK（
-     * 详见 {@link #initMobileIMSDK()}代码）而报 code=203错误！
-     */
     public void resetInitFlag() {
         init = false;
     }

@@ -33,7 +33,7 @@ class _MyAppState extends State<MyApp> {
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
     await MobileImPlugin.getInstance().init(
-      serverIP: 'rbcore.openmob.net',
+      serverIP: '192.168.82.138',
       serverPort: 7901,
     );
     String platformVersion;
