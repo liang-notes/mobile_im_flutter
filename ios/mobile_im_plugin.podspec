@@ -17,7 +17,7 @@ A new free mobile im Flutter plugin.
   s.public_header_files = 'Classes/**/*.h', 'Classes/Lib/usr/local/include/*.h'
   s.dependency 'Flutter'
   s.platform = :ios, '8.0'
-  s.vendored_libraries = 'Classes/Lib/libMobileIMSDK4i_tcp.a'
+  s.vendored_libraries = 'Classes/Lib/libMobileIMSDK4iX_common.a'
   s.static_framework = true
 
   # Flutter.framework does not contain a i386 slice. Only x86_64 simulators are supported.

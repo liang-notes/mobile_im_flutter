@@ -2,7 +2,7 @@
 #import "IMClientManager.h"
 #import "ClientCoreSDK.h"
 #import "ConfigEntity.h"
-#import "LocalDataSender.h"
+#import "LocalUDPDataSender.h"
 
 
 @implementation MobileImPlugin
@@ -49,7 +49,7 @@ static FlutterMethodChannel *_channel = nil;
 }
 
 - (void)logout: (FlutterResult)result {
-    int code = [[LocalDataSender sharedInstance] sendLoginout];
+    int code = [[LocalUDPDataSender sharedInstance] sendLoginout];
     if(code == COMMON_CODE_OK) {
         result(@(code));
     }
@@ -63,7 +63,7 @@ static FlutterMethodChannel *_channel = nil;
 - (void)sendMessage: (NSDictionary *)arguments result: (FlutterResult)result {
     NSString *message = arguments[@"message"];
     NSString *toUserId = arguments[@"toUserId"];
-    int code = [[LocalDataSender sharedInstance] sendCommonDataWithStr: message toUserId: toUserId qos: YES fp: nil withTypeu: -1];
+    int code = [[LocalUDPDataSender sharedInstance] sendCommonDataWithStr: message toUserId: toUserId qos: YES fp: nil withTypeu: -1];
     if(code == COMMON_CODE_OK) {
         NSLog(@"发送成功");
         result(@(code));
@@ -76,7 +76,7 @@ static FlutterMethodChannel *_channel = nil;
 - (void)loginWith: (NSDictionary *)arguments result: (FlutterResult)result {
     NSString *username = arguments[@"username"];
     NSString *password = arguments[@"password"];
-    int code = [[LocalDataSender sharedInstance] sendLogin: username withToken: password];
+    int code = [[LocalUDPDataSender sharedInstance] sendLogin: username withToken: password];
     if(code == COMMON_CODE_OK) {
         NSLog(@"登录成功");
         result(@(code));

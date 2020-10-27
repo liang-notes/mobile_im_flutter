@@ -14,10 +14,10 @@
 //  ----------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import "ChatMessageEvent.h"
+#import "ChatTransDataEvent.h"
 #import <Flutter/Flutter.h>
 
-@interface ChatMessageEventImpl : NSObject<ChatMessageEvent>
+@interface ChatMessageEventImpl : NSObject<ChatTransDataEvent>
 
 - (instancetype)initWithChannel: (FlutterMethodChannel *)channel;
 

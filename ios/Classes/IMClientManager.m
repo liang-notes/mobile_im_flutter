@@ -16,7 +16,6 @@
 #import "IMClientManager.h"
 #import "ClientCoreSDK.h"
 #import "ConfigEntity.h"
-#import "TCPFrameCodec.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -90,7 +89,7 @@ static IMClientManager *instance = nil;
         self.transDataListener = [[ChatMessageEventImpl alloc] initWithChannel: channel];
         self.messageQoSListener = [[MessageQoSEventImpl alloc] initWithChannel: channel];
         [ClientCoreSDK sharedInstance].chatBaseEvent = self.baseEventListener;
-        [ClientCoreSDK sharedInstance].chatMessageEvent = self.transDataListener;
+        [ClientCoreSDK sharedInstance].chatTransDataEvent = self.transDataListener;
         [ClientCoreSDK sharedInstance].messageQoSEvent = self.messageQoSListener;
         
         self._init = YES;
