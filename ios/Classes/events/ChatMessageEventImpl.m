@@ -49,8 +49,9 @@
  * @param userid 消息的发送者id（RainbowCore框架中规定发送者id=“0”即表示是由服务端主动发过的，否则表示的是其它客户端发过来的消息）
  * @param dataContent 消息内容的文本表示形式
  */
-- (void) onRecieveMessage:(NSString *)fingerPrintOfProtocal withUserId:(NSString *)dwUserid andContent:(NSString *)dataContent andTypeu:(int)typeu {
-    NSLog(@"xxxxxxx【DEBUG_UI】[%d]收到来自用户%@的消息:%@===%@", typeu, dwUserid, dataContent,self.channel);
+
+- (void)onTransBuffer:(NSString *)fingerPrintOfProtocal withUserId:(NSString *)userid andContent:(NSString *)dataContent andTypeu:(int)typeu {
+    NSLog(@"xxxxxxx【DEBUG_UI】[%d]收到来自用户%@的消息:%@===%@", typeu, userid, dataContent,self.channel);
     [self.channel invokeMethod: @"onReceiveMessage" arguments: dataContent];
 }
 
@@ -62,16 +63,18 @@
  * @see ErrorCode
  */
 - (void)onErrorResponse:(int)errorCode withErrorMsg:(NSString *)errorMsg {
-    NSLog(@"【DEBUG_UI】收到服务端错误消息，errorCode=%d, errorMsg=%@", errorCode, errorMsg);
+    
     // UI显示
+    NSString *content;
     if(errorCode == ForS_RESPONSE_FOR_UNLOGIN)
     {
-        NSString *content = [NSString stringWithFormat:@"服务端会话已失效，自动登陆/重连启动! (%d)", errorCode];
+        content = [NSString stringWithFormat:@"服务端会话已失效，自动登陆/重连启动! (%d)", errorCode];
     }
     else
     {
-        NSString *content = [NSString stringWithFormat:@"Server反馈错误码：%d,errorMsg=%@", errorCode, errorMsg];
+        content = [NSString stringWithFormat:@"Server反馈错误码：%d,errorMsg=%@", errorCode, errorMsg];
     }
+    NSLog(@"【DEBUG_UI】收到服务端错误消息，errorCode=%d, errorMsg=%@ ,content =%@", errorCode, errorMsg, content);
 }
 
 @end
