@@ -1,8 +1,8 @@
 name: mobile_im_plugin
 description: A new free mobile im Flutter plugin.
 version: 0.0.1
-author:
-homepage:
+author: wangliang<283175161@qq.com>
+homepage: https://github.com/WL2012/mobile_im_flutter
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
