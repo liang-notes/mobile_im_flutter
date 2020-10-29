@@ -1,3 +1,4 @@
 ## 0.0.1
 
-* TODO: Describe initial release.
+* initial mobile im plugin release.
+* native sdk version 3.0.x
