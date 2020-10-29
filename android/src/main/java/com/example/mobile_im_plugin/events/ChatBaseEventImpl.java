@@ -57,8 +57,6 @@ public class ChatBaseEventImpl implements ChatBaseEvent {
     @Override
     public void onLinkCloseMessage(int errorCode) {
         Log.e(TAG, "【DEBUG_UI】与IM服务器的网络连接出错关闭了，error：" + errorCode);
-
-        // TODO 以下代码仅用于DEMO哦
     }
 
     public void setLoginOkForLaunchObserver(Observer loginOkForLaunchObserver) {
